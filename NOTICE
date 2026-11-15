@@ -1,0 +1,38 @@
+Banking Cells Architecture Lab — Community Edition
+Copyright 2026 Consulting RIOM S.A.S. and contributors.
+
+This product includes software developed by Consulting RIOM S.A.S.
+(https://consultingriom.com/).
+
+Original Author and Lead Architect:
+Ricardo Vinicio Castelo Mosquera
+(https://www.linkedin.com/in/ricardocastelom/)
+
+------------------------------------------------------------------------
+TRADEMARK, CORPORATE ASSETS AND INTELLECTUAL PROPERTY NOTICE
+------------------------------------------------------------------------
+
+1. TRADEMARKS:
+The trade names, trademarks, service marks, and logos of Consulting
+RIOM S.A.S., including "RIOM" and "Consulting RIOM", are proprietary
+trademarks of Consulting RIOM S.A.S. This distribution under the
+Apache License 2.0 does not grant permission to use such trade names,
+trademarks, service marks, or logos, except as required for reasonable
+and customary use in describing the origin of the Work and reproducing
+the content of this NOTICE file.
+
+Derivative works, forks, and commercial distributions created by third
+parties must remove or replace proprietary Consulting RIOM corporate
+trademarks, wordmarks, and logos prior to public distribution.
+
+2. EXCLUDED INTELLECTUAL PROPERTY:
+Proprietary Consulting RIOM S.A.S. tools, operational materials and
+non-distributed components are not part of this software package.
+The Apache License 2.0 applies only to the files expressly included
+in this Community Edition distribution.
+
+3. DATA DISCLAIMER:
+This laboratory operates exclusively with synthetic, generated test
+data. It is an experimental and educational reference platform. It is
+not connected to banking institutions, does not process real financial
+transactions, and is not certified as a production banking core.

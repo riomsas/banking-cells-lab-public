@@ -1,0 +1,61 @@
+name: Banking Cells Lab (functional + browser E2E)
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  application-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile application and tests
+        run: python -m compileall -q app tests
+      - name: Validate browser JavaScript syntax
+        run: node --check app/web/app.js && node --check tests/browser-e2e.cjs
+      - name: Unit, integration and live HTTP/SQLite tests
+        run: python -m unittest discover -s tests -v
+      - name: Legacy CLI regression
+        run: python -m app
+  chromium-e2e:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install pinned Playwright and Chromium using runner libraries
+        run: |
+          npm install --no-save --no-package-lock playwright@1.56.1
+          npx --no-install playwright install chromium
+      - name: Start loopback server, run browser E2E and stop
+        env:
+          RIOM_LAB_DB: ${{ runner.temp }}/riom-browser.sqlite
+          RIOM_LAB_PORT: '8765'
+          RIOM_E2E_URL: http://127.0.0.1:8765
+        run: |
+          set -euo pipefail
+          python -m app.api > "${RUNNER_TEMP}/riom-lab-startup.log" 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true; wait "$SERVER_PID" 2>/dev/null || true' EXIT
+          python - <<'PY'
+          import time, urllib.request
+          for attempt in range(100):
+              try:
+                  with urllib.request.urlopen("http://127.0.0.1:8765/api/health", timeout=2) as r:
+                      assert r.status == 200
+                      print("SERVER_STARTUP=PASS")
+                      break
+              except Exception:
+                  time.sleep(0.1)
+          else:
+              raise SystemExit("SERVER_STARTUP=FAIL")
+          PY
+          node tests/browser-e2e.cjs
+# This workflow runs application tests; other compliance reviews require separate verification.
